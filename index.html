@@ -2,18 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>Cricket Yoddha - Premium Stream</title>
   
-  <!-- Fonts aur Icons -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --primary-color: #00ff87; /* Modern Green accent */
-      --bg-gradient: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-      --card-bg: rgba(255, 255, 255, 0.05);
+      --primary-color: #FFD700; /* Gold accent */
+      --bg-gradient: linear-gradient(135deg, #050505, #111111, #1a1a1a);
+      --card-bg: rgba(255, 255, 255, 0.03);
     }
 
     * {
@@ -31,46 +30,38 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 20px 10px;
+      padding: 0 0 30px 0;
+      overflow-x: hidden;
     }
 
     .container {
       width: 100%;
-      max-width: 900px;
-      background: var(--card-bg);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+      max-width: 100%;
+      background: transparent;
     }
 
-    /* Header */
     header {
-      padding: 20px;
-      text-align: center;
-      background: rgba(0, 0, 0, 0.2);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      height: 70px;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 1px solid #222;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
     }
 
-    header h1 {
-      font-size: 24px;
-      font-weight: 900;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: #fff;
+    .logo-img {
+      height: 50px;
+      width: auto;
     }
 
-    header h1 span {
-      color: var(--primary-color);
-    }
-
-    /* Responsive Iframe Container (Universal Compatibility) */
+    /* Responsive 16:9 Player */
     .video-wrapper {
       position: relative;
       width: 100%;
-      padding-top: 56.25%; /* 16:9 Aspect Ratio */
+      aspect-ratio: 16/9;
       background: #000;
     }
 
@@ -85,21 +76,21 @@
 
     /* Ticker Box */
     .ticker-container {
-      background: #000;
-      padding: 12px;
+      background: #0c0c0c;
+      padding: 12px 0;
       overflow: hidden;
       white-space: nowrap;
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      border-bottom: 1px solid rgba(255,215,0,0.1);
     }
 
     .ticker-text {
       display: inline-block;
       padding-left: 100%;
-      animation: marquee 20s linear infinite;
+      animation: marquee 25s linear infinite;
       color: var(--primary-color);
       font-weight: 700;
-      font-size: 14px;
+      font-size: 13px;
+      text-transform: uppercase;
     }
 
     @keyframes marquee {
@@ -107,56 +98,55 @@
       100% { transform: translate3d(-100%, 0, 0); }
     }
 
-    /* Action Section */
+    /* Actions */
     .content-area {
-      padding: 20px;
+      padding: 20px 15px;
     }
 
     .btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
+      display: block;
       width: 100%;
       padding: 16px;
-      background: linear-gradient(90deg, #00ff87, #60efff);
-      color: #000;
+      background: linear-gradient(180deg, #d32f2f, #8b0000); 
+      color: #fff;
+      border: 1px solid #ff5252;
+      font-weight: 800;
+      border-radius: 6px;
       font-size: 18px;
-      font-weight: 700;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      text-decoration: none;
       text-transform: uppercase;
-      transition: transform 0.2s;
-      box-shadow: 0 8px 20px rgba(0, 255, 135, 0.3);
+      text-decoration: none;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.2s;
+      box-shadow: 0 4px 0 #5e0000;
     }
 
     .btn:active {
-      transform: scale(0.98);
+      transform: translateY(4px);
+      box-shadow: none;
     }
 
     .footer-text {
       text-align: center;
       margin-top: 20px;
       font-size: 12px;
-      color: rgba(255, 255, 255, 0.5);
+      color: rgba(255, 255, 255, 0.4);
     }
   </style>
 </head>
 <body>
 
   <div class="container">
-    <!-- Header Area -->
+    <!-- Header -->
     <header>
-      <h1>CRICKET <span>YODDHA</span></h1>
+      <img src="https://i.ibb.co/HLkW7zJV/ei-1765534270242-removebg-preview.png" alt="Logo" class="logo-img">
     </header>
 
-    <!-- Cross-Browser Supported Iframe Player -->
+    <!-- Cross-Browser Supported Player Container -->
     <div class="video-wrapper">
       <iframe 
-        id="player" 
-        src="YOUR_STREAM_LINK_HERE" 
+        id="main-player" 
+        src="about:blank" 
         allowfullscreen="true" 
         scrolling="no" 
         allow="autoplay; encrypted-media; picture-in-picture"
@@ -164,35 +154,49 @@
       </iframe>
     </div>
 
-    <!-- Scrolling Info Line -->
+    <!-- Ticker -->
     <div class="ticker-container">
       <div class="ticker-text">
-        ⚡ LIVE STREAM OPTIMIZED FOR ALL BROWSERS • ENJOY HIGH DEFINITION SMOOTH STREAMING VIA PREMIUM INFRASTRUCTURE • REFRESH IF VIDEO BUFFERS ⚡
+        🏏 LIVE MATCH HD STREAMING • OPTIMIZED FOR ALL BROWSERS AND DEVICES • REFRESH IF VIDEO BUFFERS • JOIN TELEGRAM FOR INSTANT MATCH LINKS! ⚡
       </div>
     </div>
 
-    <!-- Actions Area -->
+    <!-- Action Section -->
     <div class="content-area">
       <a href="https://t.me/+rwZKMV0-L8wyOTll" target="_blank" class="btn">
-        <i class="material-icons">telegram</i> Join Telegram For Backup Links
+        JOIN TELEGRAM CHANNEL
       </a>
       
-      <p class="footer-text">Optimized for iPhone, Android, Safari, and Chrome WebView.</p>
+      <p class="footer-text">Universal Browser Engine V2 — iOS & Android Supported</p>
     </div>
   </div>
 
   <script>
-    // Safari aur Mobile WebViews ke constraints ko bypass karne ke liye optimization logic
-    document.addEventListener("DOMContentLoaded", () => {
-      const iframe = document.getElementById('player');
-      
-      // Agar stream URL dynamically update karna ho toh aap is variable me URL badal sakte hain
-      const secureStreamUrl = "YOUR_STREAM_LINK_HERE"; 
-      
-      if(secureStreamUrl !== "YOUR_STREAM_LINK_HERE" && secureStreamUrl !== "") {
-        iframe.src = secureStreamUrl;
+    // GitHub JSON automatically link fetch karne ka secure tareeqa
+    const JSON_URL = "https://raw.githubusercontent.com/manojmallah58-source/Cricket-yoddha-json/main/links.json";
+    const CURRENT_CHANNEL_ID = "yoddha_prime_hindi"; 
+
+    async function loadStream() {
+      try {
+        const response = await fetch(JSON_URL);
+        if(!response.ok) throw new Error("GitHub File Not Found");
+        
+        const data = await response.json();
+        if(data && data.channels && data.channels[CURRENT_CHANNEL_ID]) {
+          // Direct player me link pass ho rha hai safely
+          document.getElementById('main-player').src = data.channels[CURRENT_CHANNEL_ID];
+        } else {
+          console.error("Channel ID match nahi hui.");
+        }
+      } catch (e) { 
+        console.error("Stream load karne me dikkat aayi:", e); 
       }
+    }
+
+    // Dom ready hote hi fast execution bina kisi crash ke
+    document.addEventListener("DOMContentLoaded", () => {
+      loadStream();
     });
   </script>
 </body>
-  </html>
+</html>
