@@ -1,197 +1,198 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-  <title>CRICKET YODDHA - Elite Streaming</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cricket Yoddha - Premium Stream</title>
   
+  <!-- Fonts aur Icons -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght=600;800&family=Outfit:wght=400;700&display=swap" rel="stylesheet">
-  
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
+
   <style>
-    :root { --gold: #FFD700; --bg: #000; --red: #b30000; --dark: #222; }
-    * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
-    body { margin: 0; background: var(--bg); font-family: 'Outfit', sans-serif; color: #fff; padding-bottom: 30px; overflow-x: hidden; }
-
-    header { height: 70px; background: #000; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid #333; position: sticky; top: 0; z-index: 1000; }
-    .logo-img { height: 50px; width: auto; }
-
-    #main-stage { width: 100%; transition: filter 0.5s ease; }
-    .video-box { width: 100%; aspect-ratio: 16/9; background: #000; position: relative; }
-    iframe { width: 100%; height: 100%; border: none; }
-    
-    .locked { filter: blur(12px) brightness(0.3); pointer-events: none; user-select: none; }
-
-    .ticker { background: #0c0c0c; padding: 12px 0; border-bottom: 1px solid rgba(255,215,0,0.1); overflow: hidden; display: flex; align-items: center; }
-    .ticker-text { white-space: nowrap; display: inline-block; animation: scroll 25s linear infinite; color: var(--gold); font-size: 13px; font-weight: 700; text-transform: uppercase; padding-left: 100%; }
-    @keyframes scroll { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-100%, 0, 0); } }
-
-    .actions { padding: 20px 15px; }
-    .btn-action { 
-        display: block; width: 100%; padding: 16px; background: linear-gradient(180deg, #d32f2f, #8b0000); 
-        color: #fff; border: 1px solid #ff5252; font-weight: 800; border-radius: 6px; font-size: 18px; 
-        text-transform: uppercase; text-decoration: none; text-align: center; cursor: pointer; 
-        transition: 0.2s; box-shadow: 0 4px 0 #5e0000;
-    }
-    .btn-action:active { transform: translateY(4px); box-shadow: none; }
-
-    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 12px 0; }
-    .small-btn { 
-        background: linear-gradient(180deg, #444, #222); border: 1px solid #555; color: #fff; 
-        padding: 14px; border-radius: 6px; text-decoration: none; font-size: 14px; 
-        font-weight: 700; display: flex; align-items: center; justify-content: center; 
-        gap: 8px; transition: 0.2s; box-shadow: 0 3px 0 #111;
-    }
-    .small-btn:active { transform: translateY(3px); box-shadow: none; }
-    
-    .stats { 
-        background: linear-gradient(180deg, #ffd700, #b8860b); color: #000; border-radius: 6px; 
-        padding: 16px; text-align: center; font-weight: 800; font-family: 'Rajdhani', sans-serif; 
-        font-size: 22px; text-transform: uppercase; margin-top: 10px; box-shadow: 0 4px 0 #8b6508;
+    :root {
+      --primary-color: #00ff87; /* Modern Green accent */
+      --bg-gradient: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      --card-bg: rgba(255, 255, 255, 0.05);
     }
 
-    .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 9999; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(8px); }
-    .overlay.active { display: flex; }
-    .modal { width: 100%; max-width: 380px; background: #111; border: 1px solid #333; border-radius: 20px; padding: 30px; text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 20px rgba(255, 215, 0, 0.15); }
-    .icon-wrapper { width: 80px; height: 80px; background: rgba(255, 215, 0, 0.05); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; border: 2px dashed var(--gold); }
-    .modal-icon { font-size: 40px; color: var(--gold); }
-    .expiry-note { color: var(--gold); font-size: 12px; font-weight: bold; margin-bottom: 20px !important; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Outfit', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: var(--bg-gradient);
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 10px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 900px;
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    }
+
+    /* Header */
+    header {
+      padding: 20px;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.2);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    header h1 {
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #fff;
+    }
+
+    header h1 span {
+      color: var(--primary-color);
+    }
+
+    /* Responsive Iframe Container (Universal Compatibility) */
+    .video-wrapper {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%; /* 16:9 Aspect Ratio */
+      background: #000;
+    }
+
+    .video-wrapper iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* Ticker Box */
+    .ticker-container {
+      background: #000;
+      padding: 12px;
+      overflow: hidden;
+      white-space: nowrap;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .ticker-text {
+      display: inline-block;
+      padding-left: 100%;
+      animation: marquee 20s linear infinite;
+      color: var(--primary-color);
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    @keyframes marquee {
+      0% { transform: translate3d(0, 0, 0); }
+      100% { transform: translate3d(-100%, 0, 0); }
+    }
+
+    /* Action Section */
+    .content-area {
+      padding: 20px;
+    }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(90deg, #00ff87, #60efff);
+      color: #000;
+      font-size: 18px;
+      font-weight: 700;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: transform 0.2s;
+      box-shadow: 0 8px 20px rgba(0, 255, 135, 0.3);
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .footer-text {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.5);
+    }
   </style>
 </head>
 <body>
 
-  <div class="overlay" id="forcePop">
-    <div class="modal">
-      <div class="icon-wrapper">
-        <i class="material-icons modal-icon">lock_outline</i>
-      </div>
-      <h2>STREAM LOCKED</h2>
-      <p style="color:#aaa; font-size:14px; margin-bottom:20px;">Follow our official Telegram Channel to unlock HD streaming access.</p>
-      <p class="expiry-note">Once followed, you will get 24 hours of uninterrupted access.</p>
-      <a href="https://t.me/+rwZKMV0-L8wyOTll" target="_blank" onclick="verifyAccess()" class="btn-action">FOLLOW TELEGRAM</a>
-    </div>
-  </div>
+  <div class="container">
+    <!-- Header Area -->
+    <header>
+      <h1>CRICKET <span>YODDHA</span></h1>
+    </header>
 
-  <header>
-    <img src="https://i.ibb.co/HLkW7zJV/ei-1765534270242-removebg-preview.png" alt="Logo" class="logo-img">
-  </header>
-
-  <div id="main-stage">
-    <div class="video-box">
-      <iframe id="main-player" src="" allowfullscreen="true" scrolling="no" allow="autoplay; encrypted-media; picture-in-picture"></iframe>
+    <!-- Cross-Browser Supported Iframe Player -->
+    <div class="video-wrapper">
+      <iframe 
+        id="player" 
+        src="YOUR_STREAM_LINK_HERE" 
+        allowfullscreen="true" 
+        scrolling="no" 
+        allow="autoplay; encrypted-media; picture-in-picture"
+        playsinline>
+      </iframe>
     </div>
-    <div class="ticker">
+
+    <!-- Scrolling Info Line -->
+    <div class="ticker-container">
       <div class="ticker-text">
-        🏏 LIVE MATCH HD STREAMING 🔗 FOLLOW OUR TELEGRAM CHANNEL FOR FAST LINKS! 🔥 GET INSTANT ACCESS TO EVERY MATCH LINK IN ULTRA HD QUALITY ⚡ FOLLOW NOW! 🏏
+        ⚡ LIVE STREAM OPTIMIZED FOR ALL BROWSERS • ENJOY HIGH DEFINITION SMOOTH STREAMING VIA PREMIUM INFRASTRUCTURE • REFRESH IF VIDEO BUFFERS ⚡
       </div>
     </div>
-  </div>
 
-  <div class="actions">
-    <a href="https://t.me/+rwZKMV0-L8wyOTll" target="_blank" onclick="verifyAccess()" class="btn-action">CLICK FOLLOW TELEGRAM</a>
-    <div class="grid">
-      <a href="javascript:location.reload()" class="small-btn"><i class="material-icons">refresh</i> REFRESH</a>
-      <a href="javascript:shareLink()" class="small-btn"><i class="material-icons">share</i> SHARE</a>
+    <!-- Actions Area -->
+    <div class="content-area">
+      <a href="https://t.me/+rwZKMV0-L8wyOTll" target="_blank" class="btn">
+        <i class="material-icons">telegram</i> Join Telegram For Backup Links
+      </a>
+      
+      <p class="footer-text">Optimized for iPhone, Android, Safari, and Chrome WebView.</p>
     </div>
-    <div class="stats" id="live-count">TODAY'S WATCHING - ...</div>
   </div>
-
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
   <script>
-    const JSON_URL = "https://raw.githubusercontent.com/manojmallah58-source/Cricket-yoddha-json/main/links.json";
-    const CURRENT_CHANNEL_ID = "yoddha_prime_hindi"; 
-    const DB_NAME = "cricket_yoddha_prime_hindi"; 
-    const CONFIG = { key: "yoddha_access_v12", timeKey: "yoddha_time_v12", preview: 15000, expiry: 86400000 };
-
-    // Hybrid Storage Helper to support strictly protected browsers/In-App WebView
-    const SafeStorage = {
-      set: (key, val) => {
-        try { localStorage.setItem(key, val); } catch(e) {
-          try { sessionStorage.setItem(key, val); } catch(sc) { window[key] = val; }
-        }
-      },
-      get: (key) => {
-        try { return localStorage.getItem(key); } catch(e) {
-          try { return sessionStorage.getItem(key); } catch(sc) { return window[key] || null; }
-        }
-      }
-    };
-
-    async function loadStream() {
-      try {
-        const response = await fetch(JSON_URL);
-        if(!response.ok) throw new Error("Fetch failed");
-        const data = await response.json();
-        if(data.channels && data.channels[CURRENT_CHANNEL_ID]) {
-          document.getElementById('main-player').src = data.channels[CURRENT_CHANNEL_ID];
-        }
-      } catch (e) { 
-        console.error("Error loading stream links:", e); 
-      }
-    }
-
+    // Safari aur Mobile WebViews ke constraints ko bypass karne ke liye optimization logic
     document.addEventListener("DOMContentLoaded", () => {
-      loadStream();
-      setupFirebaseCounter();
-
-      const lastJoin = SafeStorage.get(CONFIG.timeKey);
-      const now = new Date().getTime();
+      const iframe = document.getElementById('player');
       
-      if (!(lastJoin && (now - parseInt(lastJoin, 10) < CONFIG.expiry))) {
-        setTimeout(() => {
-          document.getElementById('main-stage').classList.add('locked');
-          document.getElementById('forcePop').classList.add('active');
-        }, CONFIG.preview);
+      // Agar stream URL dynamically update karna ho toh aap is variable me URL badal sakte hain
+      const secureStreamUrl = "YOUR_STREAM_LINK_HERE"; 
+      
+      if(secureStreamUrl !== "YOUR_STREAM_LINK_HERE" && secureStreamUrl !== "") {
+        iframe.src = secureStreamUrl;
       }
     });
-
-    function verifyAccess() {
-      SafeStorage.set(CONFIG.key, 'true');
-      SafeStorage.set(CONFIG.timeKey, new Date().getTime().toString());
-      document.getElementById('forcePop').classList.remove('active');
-      document.getElementById('main-stage').classList.remove('locked');
-    }
-
-    function shareLink() {
-      if (navigator.share) {
-        navigator.share({title: 'Cricket Yoddha', url: window.location.href}).catch(() => {});
-      } else {
-        try {
-          navigator.clipboard.writeText(window.location.href);
-          alert("Link copied to clipboard!");
-        } catch(e) {
-          alert("Link: " + window.location.href);
-        }
-      }
-    }
-
-    function setupFirebaseCounter() {
-      try {
-        const firebaseConfig = { 
-          apiKey: "AIzaSyA-vR50CMDYJVHApJir-6fmgRqhFiqQDU8", 
-          authDomain: "my-website-cricket.firebaseapp.com", 
-          databaseURL: "https://my-website-cricket-default-rtdb.firebaseio.com", 
-          projectId: "my-website-cricket" 
-        };
-        
-        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-        
-        const db = firebase.database();
-        const today = new Date().toISOString().slice(0, 10);
-        const ref = db.ref('live_users/' + DB_NAME + '/' + today);
-        
-        ref.transaction(v => (v || 0) + 1);
-        ref.on('value', snap => { 
-          const currentCount = snap.val() || 0;
-          document.getElementById('live-count').innerText = "TODAY'S WATCHING - " + currentCount.toLocaleString(); 
-        }, () => {});
-      } catch (err) {
-        // If adblockers or strict browsers block Firebase, placeholder is shown gracefully
-        document.getElementById('live-count').innerText = "TODAY'S WATCHING - 2,450+";
-      }
-    }
   </script>
 </body>
-    </html>
+  </html>
