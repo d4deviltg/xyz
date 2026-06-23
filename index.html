@@ -1,202 +1,424 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-  <title>Cricket Yoddha - Premium Stream</title>
-  
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jio Sports ADTV</title>
 
   <style>
-    :root {
-      --primary-color: #FFD700; /* Gold accent */
-      --bg-gradient: linear-gradient(135deg, #050505, #111111, #1a1a1a);
-      --card-bg: rgba(255, 255, 255, 0.03);
+    *{margin:0;padding:0;box-sizing:border-box}
+
+    body{
+      min-height:100vh;
+      background:#050505;
+      color:#fff;
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      overflow-x:hidden;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Outfit', sans-serif;
-      -webkit-tap-highlight-color: transparent;
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background:
+        radial-gradient(circle at top left,rgba(229,9,20,.32),transparent 35%),
+        radial-gradient(circle at top right,rgba(0,102,255,.22),transparent 35%),
+        linear-gradient(to bottom,#050505,#111 45%,#050505);
+      z-index:-2;
     }
 
-    body {
-      background: var(--bg-gradient);
-      color: #ffffff;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 0 0 30px 0;
-      overflow-x: hidden;
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:50;
+      padding:16px;
+      background:linear-gradient(to bottom,rgba(0,0,0,.92),rgba(0,0,0,.55),transparent);
+      backdrop-filter:blur(10px);
     }
 
-    .container {
-      width: 100%;
-      max-width: 100%;
-      background: transparent;
+    .brand{
+      font-size:28px;
+      font-weight:900;
+      color:#e50914;
+      letter-spacing:.8px;
+      text-transform:uppercase;
     }
 
-    header {
-      height: 70px;
-      background: #000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-bottom: 1px solid #222;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
+    .hero{
+      padding:34px 16px 26px;
     }
 
-    .logo-img {
-      height: 50px;
-      width: auto;
+    .hero h1{
+      font-size:36px;
+      line-height:1.1;
+      max-width:760px;
+      font-weight:900;
+      margin-bottom:12px;
     }
 
-    /* Responsive 16:9 Player */
-    .video-wrapper {
-      position: relative;
-      width: 100%;
-      aspect-ratio: 16/9;
-      background: #000;
+    .hero p{
+      color:#ccc;
+      font-size:15px;
+      max-width:620px;
     }
 
-    .video-wrapper iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border: none;
+    .search-wrap{
+      padding:0 16px 20px;
     }
 
-    /* Ticker Box */
-    .ticker-container {
-      background: #0c0c0c;
-      padding: 12px 0;
-      overflow: hidden;
-      white-space: nowrap;
-      border-bottom: 1px solid rgba(255,215,0,0.1);
+    .search-box{
+      width:100%;
+      max-width:560px;
+      padding:15px 18px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(20,20,20,.88);
+      color:#fff;
+      outline:none;
+      font-size:15px;
+      box-shadow:0 12px 30px rgba(0,0,0,.4);
     }
 
-    .ticker-text {
-      display: inline-block;
-      padding-left: 100%;
-      animation: marquee 25s linear infinite;
-      color: var(--primary-color);
-      font-weight: 700;
-      font-size: 13px;
-      text-transform: uppercase;
+    .search-box:focus{
+      border-color:#e50914;
+      box-shadow:0 0 0 3px rgba(229,9,20,.22);
     }
 
-    @keyframes marquee {
-      0% { transform: translate3d(0, 0, 0); }
-      100% { transform: translate3d(-100%, 0, 0); }
+    .section-title{
+      padding:0 16px;
+      font-size:20px;
+      font-weight:800;
+      margin-bottom:14px;
     }
 
-    /* Actions */
-    .content-area {
-      padding: 20px 15px;
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(155px,1fr));
+      gap:18px;
+      padding:0 16px 40px;
     }
 
-    .btn {
-      display: block;
-      width: 100%;
-      padding: 16px;
-      background: linear-gradient(180deg, #d32f2f, #8b0000); 
-      color: #fff;
-      border: 1px solid #ff5252;
-      font-weight: 800;
-      border-radius: 6px;
-      font-size: 18px;
-      text-transform: uppercase;
-      text-decoration: none;
-      text-align: center;
-      cursor: pointer;
-      transition: 0.2s;
-      box-shadow: 0 4px 0 #5e0000;
+    .card{
+      position:relative;
+      min-height:210px;
+      border-radius:18px;
+      overflow:hidden;
+      cursor:pointer;
+      background:linear-gradient(145deg,#1c1c1c,#090909);
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:0 16px 40px rgba(0,0,0,.55);
+      transition:.28s ease;
     }
 
-    .btn:active {
-      transform: translateY(4px);
-      box-shadow: none;
+    .card:hover{
+      transform:scale(1.06) translateY(-6px);
+      border-color:rgba(229,9,20,.8);
+      box-shadow:0 22px 55px rgba(229,9,20,.25);
+      z-index:5;
     }
 
-    .footer-text {
-      text-align: center;
-      margin-top: 20px;
-      font-size: 12px;
-      color: rgba(255, 255, 255, 0.4);
+    .poster{
+      height:135px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:
+        radial-gradient(circle at center,rgba(255,255,255,.14),transparent 55%),
+        linear-gradient(135deg,#222,#050505);
     }
+
+    .logo{
+      width:82px;
+      height:82px;
+      object-fit:contain;
+      border-radius:16px;
+      background:#fff;
+      padding:8px;
+      box-shadow:0 10px 25px rgba(0,0,0,.45);
+    }
+
+    .fallback-logo{
+      width:82px;
+      height:82px;
+      border-radius:18px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:linear-gradient(135deg,#e50914,#7b0006);
+      font-size:30px;
+      font-weight:900;
+    }
+
+    .content{
+      padding:13px;
+      background:linear-gradient(to top,#000,rgba(0,0,0,.88));
+    }
+
+    .name{
+      font-size:14px;
+      font-weight:800;
+      line-height:1.25;
+      min-height:35px;
+    }
+
+    .meta{
+      margin-top:8px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:8px;
+      font-size:11px;
+      color:#aaa;
+    }
+
+    .live{
+      color:#fff;
+      background:#e50914;
+      padding:4px 7px;
+      border-radius:999px;
+      font-size:10px;
+      font-weight:900;
+      letter-spacing:.4px;
+    }
+
+    .watch{
+      margin-top:10px;
+      width:100%;
+      border:none;
+      border-radius:10px;
+      padding:9px;
+      color:#fff;
+      background:#e50914;
+      font-weight:800;
+      cursor:pointer;
+    }
+
+    .error{
+      grid-column:1/-1;
+      text-align:center;
+      margin-top:30px;
+      color:#ff7777;
+      font-size:17px;
+    }
+
+    @media(max-width:520px){
+      .brand{font-size:23px}
+      .hero h1{font-size:28px}
+      .grid{
+        grid-template-columns:repeat(2,1fr);
+        gap:13px;
+      }
+      .card{min-height:200px}
+    }
+  .telegram-popup{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.82);
+  backdrop-filter:blur(10px);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+  padding:18px;
+}
+
+.telegram-popup.show{
+  display:flex;
+}
+
+.telegram-card{
+  width:100%;
+  max-width:360px;
+  background:
+    radial-gradient(circle at top,rgba(0,136,204,.35),transparent 45%),
+    linear-gradient(145deg,#101010,#050505);
+  border:1px solid rgba(0,136,204,.5);
+  border-radius:24px;
+  padding:26px 22px;
+  text-align:center;
+  box-shadow:0 25px 70px rgba(0,136,204,.25);
+}
+
+.telegram-icon{
+  width:82px;
+  height:82px;
+  margin:0 auto 14px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#2aa7df,#0077b5);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:42px;
+  box-shadow:0 0 35px rgba(0,136,204,.7);
+}
+
+.telegram-card h2{
+  font-size:24px;
+  font-weight:900;
+  margin-bottom:8px;
+}
+
+.telegram-card p{
+  color:#cfcfcf;
+  font-size:14px;
+  margin-bottom:20px;
+}
+
+.tg-btn{
+  width:100%;
+  border:none;
+  border-radius:14px;
+  padding:13px;
+  font-size:15px;
+  font-weight:900;
+  cursor:pointer;
+  margin-top:10px;
+}
+
+.join-btn{
+  background:linear-gradient(135deg,#2aa7df,#0088cc);
+  color:white;
+}
+
+.close-btn{
+  background:rgba(255,255,255,.12);
+  color:white;
+}
   </style>
 </head>
+
 <body>
+<div id="telegramPopup" class="telegram-popup">
+  <div class="telegram-card">
+    <div class="telegram-icon">✈</div>
+    <h2>Join Our Telegram</h2>
+    <p>Get latest live links, updates and sports alerts instantly.</p>
 
-  <div class="container">
-    <!-- Header -->
-    <header>
-      <img src="https://i.ibb.co/HLkW7zJV/ei-1765534270242-removebg-preview.png" alt="Logo" class="logo-img">
-    </header>
+    <button id="joinTelegram" class="tg-btn join-btn">
+      Join Now
+    </button>
 
-    <!-- Cross-Browser Supported Player Container -->
-    <div class="video-wrapper">
-      <iframe 
-        id="main-player" 
-        src="about:blank" 
-        allowfullscreen="true" 
-        scrolling="no" 
-        allow="autoplay; encrypted-media; picture-in-picture"
-        playsinline>
-      </iframe>
-    </div>
-
-    <!-- Ticker -->
-    <div class="ticker-container">
-      <div class="ticker-text">
-        🏏 LIVE MATCH HD STREAMING • OPTIMIZED FOR ALL BROWSERS AND DEVICES • REFRESH IF VIDEO BUFFERS • JOIN TELEGRAM FOR INSTANT MATCH LINKS! ⚡
-      </div>
-    </div>
-
-    <!-- Action Section -->
-    <div class="content-area">
-      <a href="https://t.me/+rwZKMV0-L8wyOTll" target="_blank" class="btn">
-        JOIN TELEGRAM CHANNEL
-      </a>
-      
-      <p class="footer-text">Universal Browser Engine V2 — iOS & Android Supported</p>
-    </div>
+    <button id="closeTelegram" class="tg-btn close-btn">
+      Already Joined
+    </button>
+  </div>
+</div>
+  <div class="topbar">
+    <div class="brand">Star Sports By ADTV</div>
   </div>
 
-  <script>
-    // GitHub JSON automatically link fetch karne ka secure tareeqa
-    const JSON_URL = "https://raw.githubusercontent.com/manojmallah58-source/Cricket-yoddha-json/main/links.json";
-    const CURRENT_CHANNEL_ID = "yoddha_prime_hindi"; 
+  <section class="hero">
+    <h1>Watch Live Sports Channels</h1>
+    <p>Select your favourite channel and start watching instantly.</p>
+  </section>
 
-    async function loadStream() {
-      try {
-        const response = await fetch(JSON_URL);
-        if(!response.ok) throw new Error("GitHub File Not Found");
-        
-        const data = await response.json();
-        if(data && data.channels && data.channels[CURRENT_CHANNEL_ID]) {
-          // Direct player me link pass ho rha hai safely
-          document.getElementById('main-player').src = data.channels[CURRENT_CHANNEL_ID];
-        } else {
-          console.error("Channel ID match nahi hui.");
-        }
-      } catch (e) { 
-        console.error("Stream load karne me dikkat aayi:", e); 
-      }
+  <div class="search-wrap">
+    <input id="searchInput" class="search-box" type="text" placeholder="Search channels..." />
+  </div>
+
+  <h2 class="section-title">Live Channels</h2>
+
+  <div id="channelGrid" class="grid"></div>
+
+<script>
+  const JSON_URL = "https://binge-giotv.pages.dev/data/id.json";
+  const PLAYER_PAGE = "player.html";
+
+  const grid = document.getElementById("channelGrid");
+  const searchInput = document.getElementById("searchInput");
+
+  let allChannels = [];
+
+  async function loadChannels(){
+    try{
+      const res = await fetch(JSON_URL);
+      const data = await res.json();
+
+      allChannels = data.channels || [];
+      renderChannels(allChannels);
+    }catch(e){
+      console.error(e);
+      grid.innerHTML = `<div class="error">Failed to load channels</div>`;
+    }
+  }
+
+  function renderChannels(channels){
+    grid.innerHTML = "";
+
+    if(!channels.length){
+      grid.innerHTML = `<div class="error">No channels found</div>`;
+      return;
     }
 
-    // Dom ready hote hi fast execution bina kisi crash ke
-    document.addEventListener("DOMContentLoaded", () => {
-      loadStream();
+    channels.forEach(channel=>{
+      const card = document.createElement("div");
+      card.className = "card";
+
+      const logo = channel.logo || channel.image || channel.icon || "";
+
+      const firstLetter = (channel.name || channel.id || "?").charAt(0).toUpperCase();
+
+      card.innerHTML = `
+        <div class="poster">
+          ${
+            logo
+            ? `<img class="logo" src="${logo}" alt="${channel.name || channel.id}">`
+            : `<div class="fallback-logo">${firstLetter}</div>`
+          }
+        </div>
+
+        <div class="content">
+          <div class="name">${channel.name || channel.id}</div>
+
+          <div class="meta">
+            <span>ID: ${channel.id}</span>
+            <span class="live">LIVE</span>
+          </div>
+
+          <button class="watch">▶ Watch Now</button>
+        </div>
+      `;
+
+      card.addEventListener("click",()=>{
+        window.location.href = `${PLAYER_PAGE}?id=${encodeURIComponent(channel.id)}`;
+      });
+
+      grid.appendChild(card);
     });
-  </script>
+  }
+
+  searchInput.addEventListener("input",()=>{
+    const q = searchInput.value.toLowerCase().trim();
+
+    const filtered = allChannels.filter(channel =>
+      (channel.name || "").toLowerCase().includes(q) ||
+      (channel.id || "").toLowerCase().includes(q)
+    );
+
+    renderChannels(filtered);
+  });
+const TELEGRAM_LINK = "https://t.me/adtvlivehere";
+
+const telegramPopup = document.getElementById("telegramPopup");
+const joinTelegram = document.getElementById("joinTelegram");
+const closeTelegram = document.getElementById("closeTelegram");
+
+window.addEventListener("load", () => {
+  setTimeout(() => {
+    telegramPopup.classList.add("show");
+  }, 800);
+});
+
+joinTelegram.addEventListener("click", () => {
+  window.open(TELEGRAM_LINK, "_blank");
+  telegramPopup.classList.remove("show");
+});
+
+closeTelegram.addEventListener("click", () => {
+  telegramPopup.classList.remove("show");
+});
+  loadChannels();
+</script>
+
 </body>
 </html>
