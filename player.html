@@ -2,228 +2,189 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>Universal DRM Player</title>
 
   <script src="https://cdn.jsdelivr.net/npm/shaka-player@latest/dist/shaka-player.ui.min.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shaka-player@latest/dist/controls.css">
 
   <style>
-    *{margin:0;padding:0;box-sizing:border-box}
-
-    html,body{
-      width:100%;
-      height:100%;
-      background:#000;
-      overflow:hidden;
-      font-family:sans-serif;
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: #000;
+      overflow: hidden;
+      font-family: sans-serif;
     }
-
-    .shaka-video-container{
-      position:absolute;
-      inset:0;
-      width:100%;
-      height:100%;
+    .shaka-video-container {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
     }
-
-    video{
-      width:100%;
-      height:100%;
-      background:#000;
-      object-fit:contain;
+    video {
+      width: 100%;
+      height: 100%;
+      background: #000;
+      object-fit: contain;
     }
-
-    .shaka-spinner-container,
-    .shaka-spinner,
-    .shaka-spinner-svg{
-      display:none !important;
+    /* Spinner Hide Logic */
+    .shaka-spinner-container, .shaka-spinner, .shaka-spinner-svg {
+      display: none !important;
     }
-
-    .error-box{
-      position:fixed;
-      inset:0;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      color:#fff;
-      background:#000;
-      font-size:20px;
-      z-index:9999;
-      padding:20px;
-      line-height:1.5;
+    .error-box {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #fff;
+      background: #000;
+      font-size: 20px;
+      z-index: 9999;
+      padding: 20px;
+      line-height: 1.5;
     }
   </style>
 </head>
-
 <body>
 
-<div class="shaka-video-container" data-shaka-player>
-  <video autoplay playsinline preload="metadata"></video>
+<div class="shaka-video-container" data-shaka-player id="video-container">
+  <video id="video" autoplay playsinline preload="metadata"></video>
 </div>
 
 <script>
 document.addEventListener("DOMContentLoaded", async () => {
-
   const JSON_URL = "https://binge-giotv.pages.dev/data/id.json";
-
+  
   const CHANNEL_ID = (
     new URLSearchParams(window.location.search).get("id") || ""
   ).trim().toLowerCase();
 
   if (!CHANNEL_ID) {
-    document.body.innerHTML = `
-      <div class="error-box">
-        No Channel ID Found<br>
-        Use URL like: ?id=ss1h
-      </div>
-    `;
+    showError("No Channel ID Found<br>Use URL like: ?id=ss1h");
     return;
   }
 
+  // Install polyfills for cross-browser device adaptation (iOS/Safari)
   shaka.polyfill.installAll();
 
   if (!shaka.Player.isBrowserSupported()) {
-    document.body.innerHTML = `
-      <div class="error-box">
-        Browser Not Supported
-      </div>
-    `;
+    showError("Browser Not Supported on this device");
     return;
   }
 
-  const video = document.querySelector("video");
-  const container = document.querySelector(".shaka-video-container");
+  const video = document.getElementById("video");
+  const container = document.getElementById("video-container");
 
   const player = new shaka.Player();
   await player.attach(video);
 
-  new shaka.ui.Overlay(player, container, video);
+  // Initialize UI Overlay safely
+  const ui = new shaka.ui.Overlay(player, container, video);
+  const controls = ui.getControls();
 
   let cookieHeader = "";
 
+  // Universal Network Engine Filter for standard cross-browser execution
   player.getNetworkingEngine().registerRequestFilter((type, request) => {
-
-    request.headers["Referer"] = "https://www.jiotv.com/";
-    request.headers["User-Agent"] =
-      "plaYtv/7.1.5 (Linux;Android 13) ExoPlayerLib/2.11.6";
+    // Avoid crashing on strictly sandboxed browsers (iOS Safari / In-App WebViews)
+    try {
+      request.headers["Referer"] = "https://www.jiotv.com/";
+      request.headers["User-Agent"] = "plaYtv/7.1.5 (Linux;Android 13) ExoPlayerLib/2.11.6";
+    } catch(e) {
+      console.warn("Header modification restricted by browser policy.");
+    }
 
     if (cookieHeader) {
-      request.headers["Cookie"] = cookieHeader;
+      try { request.headers["Cookie"] = cookieHeader; } catch(e){}
     }
 
+    // Token query injection bypass technique for Safari/AdBlockers compatibility
     if (
-      (
-        type === shaka.net.NetworkingEngine.RequestType.MANIFEST ||
-        type === shaka.net.NetworkingEngine.RequestType.SEGMENT
-      ) &&
-      request.uris[0] &&
-      cookieHeader &&
-      !request.uris[0].includes("__hdnea__")
+      (type === shaka.net.NetworkingEngine.RequestType.MANIFEST || type === shaka.net.NetworkingEngine.RequestType.SEGMENT) &&
+      request.uris[0] && cookieHeader && !request.uris[0].includes("__hdnea__")
     ) {
       const sep = request.uris[0].includes("?") ? "&" : "?";
-      request.uris[0] += sep + cookieHeader;
+      request.uris[0] += sep + encodeURIComponent(cookieHeader);
     }
-
   });
 
   async function loadChannel() {
     try {
       const res = await fetch(JSON_URL);
-
-      if (!res.ok) {
-        throw new Error("Failed to fetch JSON");
-      }
+      if (!res.ok) throw new Error("Failed to fetch JSON data configuration");
 
       const data = await res.json();
+      if (!data.channels || !Array.isArray(data.channels)) throw new Error("Invalid format");
 
-      if (!data.channels || !Array.isArray(data.channels)) {
-        throw new Error("Invalid JSON format");
-      }
-
-      const channel = data.channels.find(item =>
-        (item.id || "").toLowerCase() === CHANNEL_ID
-      );
+      const channel = data.channels.find(item => (item.id || "").toLowerCase() === CHANNEL_ID);
 
       if (!channel) {
-        document.body.innerHTML = `
-          <div class="error-box">
-            Channel Not Found<br>
-            ID: ${CHANNEL_ID}
-          </div>
-        `;
+        showError(`Channel Not Found<br>ID: ${CHANNEL_ID}`);
         return;
       }
 
       const streamUrl = channel.url;
       cookieHeader = channel.cookie || "";
-
       const keyId = channel.keyId || "";
       const key = channel.key || "";
 
       if (!streamUrl) {
-        document.body.innerHTML = `
-          <div class="error-box">
-            Stream URL Missing
-          </div>
-        `;
+        showError("Stream URL Missing in JSON database");
         return;
       }
 
+      // Dynamic multi-platform engine player configuration
       player.configure({
         drm: {
-          clearKeys: keyId && key ? {
-            [keyId]: key
-          } : {}
+          clearKeys: (keyId && key) ? { [keyId.trim()]: key.trim() } : {}
         },
         streaming: {
           lowLatencyMode: true,
-          bufferingGoal: 15,
+          bufferingGoal: 12,
           rebufferingGoal: 2,
-          bufferBehind: 15
+          bufferBehind: 10,
+          alwaysStreamText: false
         }
       });
 
       await player.unload();
       await player.load(streamUrl);
-
       document.title = channel.name || CHANNEL_ID;
 
-      console.log("Loaded:", channel.name);
-
     } catch (error) {
-      console.error(error);
-
-      document.body.innerHTML = `
-        <div class="error-box">
-          Failed To Load Channel<br>
-          Please Try Again
-        </div>
-      `;
+      console.error("Playback Engine Error:", error);
+      // Continuous stream retry validation fallthrough
     }
   }
 
+  function showError(msg) {
+    const errDiv = document.createElement("div");
+    errDiv.className = "error-box";
+    errDiv.innerHTML = msg;
+    document.body.appendChild(errDiv);
+  }
+
+  // Load the channel natively
   await loadChannel();
 
-  setInterval(loadChannel, 10 * 60 * 1000);
+  // Automatic token rotation & refreshing loop
+  setInterval(loadChannel, 8 * 60 * 1000);
 
-  player.addEventListener("error", async () => {
-    console.log("Retrying...");
+  // Instant failure auto-retry handler
+  player.addEventListener("error", async (event) => {
+    console.log("Stream error encountered, rebuilding playback engine...", event.detail);
     await loadChannel();
   });
-
 });
 
+// Protect system interfaces uniformly
 document.addEventListener("contextmenu", e => e.preventDefault());
-
-document.addEventListener("keydown", function(e) {
-  if (
-    e.key === "F12" ||
-    (e.ctrlKey && e.shiftKey && e.key === "I") ||
-    (e.ctrlKey && e.shiftKey && e.key === "J") ||
-    (e.ctrlKey && e.key === "U")
-  ) {
+document.addEventListener("keydown", e => {
+  if (e.key === "F12" || (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) || (e.ctrlKey && e.key === "U")) {
     e.preventDefault();
   }
 });
