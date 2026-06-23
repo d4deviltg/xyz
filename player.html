@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Universal DRM Player</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/shaka-player@latest/dist/shaka-player.ui.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shaka-player@latest/dist/controls.css">
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+
+    html,body{
+      width:100%;
+      height:100%;
+      background:#000;
+      overflow:hidden;
+      font-family:sans-serif;
+    }
+
+    .shaka-video-container{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+    }
+
+    video{
+      width:100%;
+      height:100%;
+      background:#000;
+      object-fit:contain;
+    }
+
+    .shaka-spinner-container,
+    .shaka-spinner,
+    .shaka-spinner-svg{
+      display:none !important;
+    }
+
+    .error-box{
+      position:fixed;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      color:#fff;
+      background:#000;
+      font-size:20px;
+      z-index:9999;
+      padding:20px;
+      line-height:1.5;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="shaka-video-container" data-shaka-player>
+  <video autoplay playsinline preload="metadata"></video>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+
+  const JSON_URL = "https://binge-giotv.pages.dev/data/id.json";
+
+  const CHANNEL_ID = (
+    new URLSearchParams(window.location.search).get("id") || ""
+  ).trim().toLowerCase();
+
+  if (!CHANNEL_ID) {
+    document.body.innerHTML = `
+      <div class="error-box">
+        No Channel ID Found<br>
+        Use URL like: ?id=ss1h
+      </div>
+    `;
+    return;
+  }
+
+  shaka.polyfill.installAll();
+
+  if (!shaka.Player.isBrowserSupported()) {
+    document.body.innerHTML = `
+      <div class="error-box">
+        Browser Not Supported
+      </div>
+    `;
+    return;
+  }
+
+  const video = document.querySelector("video");
+  const container = document.querySelector(".shaka-video-container");
+
+  const player = new shaka.Player();
+  await player.attach(video);
+
+  new shaka.ui.Overlay(player, container, video);
+
+  let cookieHeader = "";
+
+  player.getNetworkingEngine().registerRequestFilter((type, request) => {
+
+    request.headers["Referer"] = "https://www.jiotv.com/";
+    request.headers["User-Agent"] =
+      "plaYtv/7.1.5 (Linux;Android 13) ExoPlayerLib/2.11.6";
+
+    if (cookieHeader) {
+      request.headers["Cookie"] = cookieHeader;
+    }
+
+    if (
+      (
+        type === shaka.net.NetworkingEngine.RequestType.MANIFEST ||
+        type === shaka.net.NetworkingEngine.RequestType.SEGMENT
+      ) &&
+      request.uris[0] &&
+      cookieHeader &&
+      !request.uris[0].includes("__hdnea__")
+    ) {
+      const sep = request.uris[0].includes("?") ? "&" : "?";
+      request.uris[0] += sep + cookieHeader;
+    }
+
+  });
+
+  async function loadChannel() {
+    try {
+      const res = await fetch(JSON_URL);
+
+      if (!res.ok) {
+        throw new Error("Failed to fetch JSON");
+      }
+
+      const data = await res.json();
+
+      if (!data.channels || !Array.isArray(data.channels)) {
+        throw new Error("Invalid JSON format");
+      }
+
+      const channel = data.channels.find(item =>
+        (item.id || "").toLowerCase() === CHANNEL_ID
+      );
+
+      if (!channel) {
+        document.body.innerHTML = `
+          <div class="error-box">
+            Channel Not Found<br>
+            ID: ${CHANNEL_ID}
+          </div>
+        `;
+        return;
+      }
+
+      const streamUrl = channel.url;
+      cookieHeader = channel.cookie || "";
+
+      const keyId = channel.keyId || "";
+      const key = channel.key || "";
+
+      if (!streamUrl) {
+        document.body.innerHTML = `
+          <div class="error-box">
+            Stream URL Missing
+          </div>
+        `;
+        return;
+      }
+
+      player.configure({
+        drm: {
+          clearKeys: keyId && key ? {
+            [keyId]: key
+          } : {}
+        },
+        streaming: {
+          lowLatencyMode: true,
+          bufferingGoal: 15,
+          rebufferingGoal: 2,
+          bufferBehind: 15
+        }
+      });
+
+      await player.unload();
+      await player.load(streamUrl);
+
+      document.title = channel.name || CHANNEL_ID;
+
+      console.log("Loaded:", channel.name);
+
+    } catch (error) {
+      console.error(error);
+
+      document.body.innerHTML = `
+        <div class="error-box">
+          Failed To Load Channel<br>
+          Please Try Again
+        </div>
+      `;
+    }
+  }
+
+  await loadChannel();
+
+  setInterval(loadChannel, 10 * 60 * 1000);
+
+  player.addEventListener("error", async () => {
+    console.log("Retrying...");
+    await loadChannel();
+  });
+
+});
+
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", function(e) {
+  if (
+    e.key === "F12" ||
+    (e.ctrlKey && e.shiftKey && e.key === "I") ||
+    (e.ctrlKey && e.shiftKey && e.key === "J") ||
+    (e.ctrlKey && e.key === "U")
+  ) {
+    e.preventDefault();
+  }
+});
+</script>
+
+</body>
+</html>
