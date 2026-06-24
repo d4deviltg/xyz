@@ -210,99 +210,11 @@
       }
       .card{min-height:200px}
     }
-  .telegram-popup{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.82);
-  backdrop-filter:blur(10px);
-  display:none;
-  align-items:center;
-  justify-content:center;
-  z-index:9999;
-  padding:18px;
-}
-
-.telegram-popup.show{
-  display:flex;
-}
-
-.telegram-card{
-  width:100%;
-  max-width:360px;
-  background:
-    radial-gradient(circle at top,rgba(0,136,204,.35),transparent 45%),
-    linear-gradient(145deg,#101010,#050505);
-  border:1px solid rgba(0,136,204,.5);
-  border-radius:24px;
-  padding:26px 22px;
-  text-align:center;
-  box-shadow:0 25px 70px rgba(0,136,204,.25);
-}
-
-.telegram-icon{
-  width:82px;
-  height:82px;
-  margin:0 auto 14px;
-  border-radius:50%;
-  background:linear-gradient(135deg,#2aa7df,#0077b5);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:42px;
-  box-shadow:0 0 35px rgba(0,136,204,.7);
-}
-
-.telegram-card h2{
-  font-size:24px;
-  font-weight:900;
-  margin-bottom:8px;
-}
-
-.telegram-card p{
-  color:#cfcfcf;
-  font-size:14px;
-  margin-bottom:20px;
-}
-
-.tg-btn{
-  width:100%;
-  border:none;
-  border-radius:14px;
-  padding:13px;
-  font-size:15px;
-  font-weight:900;
-  cursor:pointer;
-  margin-top:10px;
-}
-
-.join-btn{
-  background:linear-gradient(135deg,#2aa7df,#0088cc);
-  color:white;
-}
-
-.close-btn{
-  background:rgba(255,255,255,.12);
-  color:white;
-}
   </style>
 </head>
 
 <body>
-<div id="telegramPopup" class="telegram-popup">
-  <div class="telegram-card">
-    <div class="telegram-icon">✈</div>
-    <h2>Join Our Telegram</h2>
-    <p>Get latest live links, updates and sports alerts instantly.</p>
 
-    <button id="joinTelegram" class="tg-btn join-btn">
-      Join Now
-    </button>
-
-    <button id="closeTelegram" class="tg-btn close-btn">
-      Already Joined
-    </button>
-  </div>
-</div>
   <div class="topbar">
     <div class="brand">Star Sports By ADTV</div>
   </div>
@@ -355,7 +267,6 @@
       card.className = "card";
 
       const logo = channel.logo || channel.image || channel.icon || "";
-
       const firstLetter = (channel.name || channel.id || "?").charAt(0).toUpperCase();
 
       card.innerHTML = `
@@ -397,26 +308,7 @@
 
     renderChannels(filtered);
   });
-const TELEGRAM_LINK = "https://t.me/adtvlivehere";
 
-const telegramPopup = document.getElementById("telegramPopup");
-const joinTelegram = document.getElementById("joinTelegram");
-const closeTelegram = document.getElementById("closeTelegram");
-
-window.addEventListener("load", () => {
-  setTimeout(() => {
-    telegramPopup.classList.add("show");
-  }, 800);
-});
-
-joinTelegram.addEventListener("click", () => {
-  window.open(TELEGRAM_LINK, "_blank");
-  telegramPopup.classList.remove("show");
-});
-
-closeTelegram.addEventListener("click", () => {
-  telegramPopup.classList.remove("show");
-});
   loadChannels();
 </script>
 
